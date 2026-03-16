@@ -35,8 +35,7 @@ export function calcularConfiguracionEjesAutomatica(datos: DatoBurbuja[]): Confi
 }
 
 function construirEje(minimo: number, maximo: number): ConfiguracionEje {
-  const rango = Math.abs(maximo - minimo);
-  const margen = rango === 0 ? Math.max(1, Math.abs(minimo) * 0.25 || 1) : rango * 0.12;
+  const margen = 1;
 
   const inicio = redondear(minimo - margen);
   const maximoConMargen = redondear(maximo + margen);

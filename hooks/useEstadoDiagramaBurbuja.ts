@@ -178,7 +178,7 @@ export function useEstadoDiagramaBurbuja() {
     }
 
     setFilas(filasActualizadas);
-  setCeldasInvalidas(celdasInvalidasLocales);
+    setCeldasInvalidas(celdasInvalidasLocales);
 
     if (numeroCeldasNoNumericas > 0) {
       return {
@@ -225,15 +225,7 @@ export function useEstadoDiagramaBurbuja() {
     setIndiceSeleccionado(datosConColor.length > 0 ? 0 : null);
 
     const nuevoEje = calcularConfiguracionEjesAutomatica(datosConColor);
-    setConfiguracionEjes((actual) => {
-      if (actual.ejeX.maximo <= actual.ejeX.inicio || actual.ejeX.unidadPrincipal <= 0) {
-        return nuevoEje;
-      }
-      if (actual.ejeY.maximo <= actual.ejeY.inicio || actual.ejeY.unidadPrincipal <= 0) {
-        return nuevoEje;
-      }
-      return actual;
-    });
+    setConfiguracionEjes(nuevoEje);
 
     setMensaje("Diagrama generado correctamente.");
     return true;

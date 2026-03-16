@@ -120,15 +120,6 @@ export function validarYTransformarFilas(
 }
 
 export function colorPredeterminado(indice: number): string {
-  const paleta = [
-    "#1e5a3c",
-    "#2f7d56",
-    "#4a9c72",
-    "#70b08b",
-    "#8ec3a1",
-    "#b2d5be",
-    "#6e8f79",
-    "#476a55",
-  ];
-  return paleta[indice % paleta.length];
+  void indice;
+  return "#8ec3a1";
 }

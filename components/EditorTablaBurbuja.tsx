@@ -15,6 +15,7 @@ interface PropiedadesEditorTablaBurbuja {
   alEliminarFila: (filaId: string) => void;
   alGenerarDiagrama: () => void;
   alPegarDesdeExcel: (texto: string, indiceFila: number, indiceCampo: number) => string | undefined;
+  alPegarDesdePortapapeles: () => Promise<void>;
 }
 
 const CAMPOS: { clave: ClaveCampoFila; etiqueta: string }[] = [
@@ -33,6 +34,7 @@ export function EditorTablaBurbuja({
   alEliminarFila,
   alGenerarDiagrama,
   alPegarDesdeExcel,
+  alPegarDesdePortapapeles,
 }: PropiedadesEditorTablaBurbuja) {
   const esMensajeExito =
     typeof mensaje === "string" &&
@@ -113,6 +115,15 @@ export function EditorTablaBurbuja({
         </button>
         <button type="button" className="boton boton-primario" onClick={alGenerarDiagrama}>
           Generar diagrama
+        </button>
+        <button
+          type="button"
+          className="boton boton-secundario"
+          onClick={() => {
+            void alPegarDesdePortapapeles();
+          }}
+        >
+          Pegar desde portapapeles
         </button>
       </div>
       <p className="mensaje">Máximo {LIMITE_FILAS} filas. Mínimo 1 fila completa para generar.</p>

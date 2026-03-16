@@ -96,14 +96,26 @@ export async function exportarDiagramaBurbujaAExcel({
   hoja.getCell(`B${ultimaFilaDatos + 6}`).value = nombres.variableTamano;
 
   if (imagenGraficoBase64) {
+    const filaTituloGrafico = ultimaFilaDatos + 8;
+    hoja.mergeCells(`A${filaTituloGrafico}:D${filaTituloGrafico}`);
+    const celdaTituloGrafico = hoja.getCell(`A${filaTituloGrafico}`);
+    celdaTituloGrafico.value = `Diagrama de burbujas - ${nombres.titulo}`;
+    celdaTituloGrafico.font = { name: "Segoe UI", bold: true, color: { argb: "FF1E5A3C" } };
+    celdaTituloGrafico.fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FFEAF3ED" },
+    };
+    celdaTituloGrafico.alignment = { vertical: "middle", horizontal: "center" };
+
     const imagenId = libro.addImage({
       base64: imagenGraficoBase64,
       extension: "png",
     });
 
     hoja.addImage(imagenId, {
-      tl: { col: 5, row: 1 },
-      ext: { width: 820, height: 460 },
+      tl: { col: 0, row: filaTituloGrafico },
+      ext: { width: 940, height: 520 },
       editAs: "oneCell",
     });
   }

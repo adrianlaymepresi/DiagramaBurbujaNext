@@ -36,6 +36,30 @@ export function AplicacionDiagramador() {
     setMensaje,
   } = useEstadoDiagramaBurbuja();
 
+  async function pegarDesdePortapapeles(): Promise<void> {
+    try {
+      if (!navigator.clipboard?.readText) {
+        setMensaje("Tu navegador no permite leer el portapapeles de forma directa.");
+        return;
+      }
+
+      const textoPortapapeles = await navigator.clipboard.readText();
+      if (!textoPortapapeles.trim()) {
+        setMensaje("El portapapeles está vacío o no contiene datos de tabla.");
+        return;
+      }
+
+      const resultado = aplicarPegadoDesdeExcel(textoPortapapeles, 0, 0);
+      if (resultado.mensaje) {
+        setMensaje(resultado.mensaje);
+      }
+    } catch {
+      setMensaje(
+        "No se pudo leer el portapapeles. Usa Ctrl+V sobre una celda o concede permisos al navegador."
+      );
+    }
+  }
+
   return (
     <main className="pagina">
       <div className="contenedor-principal">
@@ -46,78 +70,76 @@ export function AplicacionDiagramador() {
           </p>
         </header>
 
-        <div className="rejilla">
-          <div className="columna">
-            <EditorTablaBurbuja
-              filas={filas}
-              celdasInvalidas={celdasInvalidas}
-              mensaje={mensaje}
-              puedeAgregarFila={puedeAgregarFila}
-              alCambiarValor={actualizarValorCelda}
-              alAgregarFila={agregarFila}
-              alEliminarFila={eliminarFila}
-              alGenerarDiagrama={generarDiagrama}
-              alPegarDesdeExcel={(texto, indiceFila, indiceCampo) => {
-                const resultado = aplicarPegadoDesdeExcel(texto, indiceFila, indiceCampo);
-                if (resultado.mensaje) {
-                  setMensaje(resultado.mensaje);
-                }
-                return resultado.mensaje;
-              }}
-            />
-            <div className="tarjeta">
-              <h3>4. Exportación</h3>
-              <p className="mensaje">Exporta la tabla y el gráfico en un archivo Excel presentable.</p>
-              <div className="fila-botones">
-                <BotonExportarExcel
-                  datos={datosGraficos}
-                  nombres={nombresDiagrama}
-                  referenciaGrafico={referenciaGrafico}
-                  deshabilitado={!hayDatosParaExportar}
-                  alFinalizarExportacion={(mensajeExportacion, esError) => {
-                    setMensaje(mensajeExportacion);
-                    if (esError) {
-                      return;
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+        <div className="flujo-vertical">
+          <EditorTablaBurbuja
+            filas={filas}
+            celdasInvalidas={celdasInvalidas}
+            mensaje={mensaje}
+            puedeAgregarFila={puedeAgregarFila}
+            alCambiarValor={actualizarValorCelda}
+            alAgregarFila={agregarFila}
+            alEliminarFila={eliminarFila}
+            alGenerarDiagrama={generarDiagrama}
+            alPegarDesdeExcel={(texto, indiceFila, indiceCampo) => {
+              const resultado = aplicarPegadoDesdeExcel(texto, indiceFila, indiceCampo);
+              if (resultado.mensaje) {
+                setMensaje(resultado.mensaje);
+              }
+              return resultado.mensaje;
+            }}
+            alPegarDesdePortapapeles={pegarDesdePortapapeles}
+          />
 
-          <div className="columna">
-            {diagramaGenerado ? (
-              <>
-                <GraficoBurbuja
-                  referenciaGrafico={referenciaGrafico}
-                  datos={datosGraficos}
-                  nombres={nombresDiagrama}
-                  configuracionEjes={configuracionEjes}
-                  indiceSeleccionado={indiceSeleccionado}
-                  alSeleccionarBurbuja={seleccionarBurbuja}
-                />
-                <FormularioConfiguracionDiagrama
-                  nombres={nombresDiagrama}
-                  alCambiarNombre={cambiarNombreDiagrama}
-                />
-                <PanelPersonalizacionBurbuja
-                  datos={datosGraficos}
-                  indiceSeleccionado={indiceSeleccionado}
-                  alCambiarColor={cambiarColorBurbujaSeleccionada}
-                />
-                <PanelConfiguracionEjes
-                  configuracionEjes={configuracionEjes}
-                  alCambiarEje={cambiarConfiguracionEje}
-                />
-              </>
-            ) : (
-              <section className="tarjeta">
-                <h2>2. Diagrama de burbujas</h2>
-                <p className="mensaje">
-                  Genera el diagrama para habilitar la personalización de ejes, nombres y colores por burbuja.
-                </p>
-              </section>
-            )}
+          {diagramaGenerado ? (
+            <>
+              <GraficoBurbuja
+                referenciaGrafico={referenciaGrafico}
+                datos={datosGraficos}
+                nombres={nombresDiagrama}
+                configuracionEjes={configuracionEjes}
+                indiceSeleccionado={indiceSeleccionado}
+                alSeleccionarBurbuja={seleccionarBurbuja}
+              />
+              <FormularioConfiguracionDiagrama
+                nombres={nombresDiagrama}
+                alCambiarNombre={cambiarNombreDiagrama}
+              />
+              <PanelPersonalizacionBurbuja
+                datos={datosGraficos}
+                indiceSeleccionado={indiceSeleccionado}
+                alCambiarColor={cambiarColorBurbujaSeleccionada}
+              />
+              <PanelConfiguracionEjes
+                configuracionEjes={configuracionEjes}
+                alCambiarEje={cambiarConfiguracionEje}
+              />
+            </>
+          ) : (
+            <section className="tarjeta">
+              <h2>2. Diagrama de burbujas</h2>
+              <p className="mensaje">
+                Genera el diagrama para habilitar la personalización de ejes, nombres y colores por burbuja.
+              </p>
+            </section>
+          )}
+
+          <div className="tarjeta">
+            <h3>4. Exportación</h3>
+            <p className="mensaje">Exporta la tabla y el gráfico en un archivo Excel presentable.</p>
+            <div className="fila-botones">
+              <BotonExportarExcel
+                datos={datosGraficos}
+                nombres={nombresDiagrama}
+                referenciaGrafico={referenciaGrafico}
+                deshabilitado={!hayDatosParaExportar}
+                alFinalizarExportacion={(mensajeExportacion, esError) => {
+                  setMensaje(mensajeExportacion);
+                  if (esError) {
+                    return;
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
