@@ -1,0 +1,16 @@
+:root {
+  --color-fondo-app: #f7f4ef;
+  --color-fondo-tarjeta: #ffffff;
+  --color-fondo-tabla: #fbf8f3;
+  --color-fondo-encabezado-tabla: #dbe8de;
+  --color-fondo-fila-par: #f4f9f5;
+  --color-fondo-fila-impar: #ffffff;
+  --color-texto-principal: #1f2a24;
+  --color-texto-secundario: #4f6358;
+  --color-borde: #c8d8cc;
+  --color-acento: #1e5a3c;
+  --color-acento-hover: #14452d;
+  --color-error: #b53838;
+  --color-exito: #216d4c;
+  --sombra-tarjeta: 0 12px 28px rgba(24, 58, 42, 0.1);
+}
